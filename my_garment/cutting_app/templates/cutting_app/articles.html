@@ -10,7 +10,8 @@
 </form>
 {% for obj in list_objects %}
     {% if obj.title %}
-        <div><a href="{% url  'garment:article-detail' obj.slug %}"> {{obj.title}}</a></div>
+        
+     <div><a href="{{ obj.get_absolute_url}}"> {{obj.title}}-{{obj.content}}</a></div>
     {% endif %}
 
 

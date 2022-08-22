@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{%block content%}
+
+<ol>
+{% for obj in  object_list  %}
+    {% if obj.title %}
+    <li> <a href="{{obj.get_absolute_url}}"> {{ obj.title}}-{{ obj.content}}</a></li>
+        <h1> </h1>
+        <p> </p>
+        <p></p>
+    {% endif %}        
+{% endfor %}
+
+
+{% endblock %}

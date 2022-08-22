@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-   <a href="{% url 'garment:create' %}">jamal</a>
-</body>
-</html>
+{% extends 'base.html' %}
+{%block content%}
+<h1> {{ object.title}}</h1>
+<p> {{object.content}}</p>
+<p> Author {{object.user.id}} 
+{% if request.user == object.user %} This is you {% endif %} </p>
+
+{% endblock %}

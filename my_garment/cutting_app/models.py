@@ -1,28 +1,39 @@
+from importlib.resources import contents
+from django.conf import settings   
 from django.db import models
 from datetime import datetime
 from django.urls import reverse
 from django.db.models.signals import pre_save,post_save
+from django.db.models import Q
 from django.shortcuts import HttpResponseRedirect
 from django.utils import timezone
 from .utils import slugify_instance_title
-# from phonenumber_field.modelfields import PhoneNumberField
+#
 
-# class testPhone(model s.Model):
-#     name = models.CharField(max_length=255)
-#     phone_number = PhoneNumberField()
-#     fax_number = PhoneNumberField(blank=True)
-# # Create your models here.
-
+User = settings.AUTH_USER_MODEL
+class ArticleQuerySet(models.QuerySet):
+    def search(self,query=None):
+        if query is None or query == "":
+            return self.none()
+        lookups = Q(title__icontains=query) | Q(content__icontains=query)
+        return self.filter(lookups)
+class ArticleManager(models.Manager):
+    def get_queryset(self):
+        return ArticleQuerySet(self.model,using=self._db)
+    def search(self,query=None):
+        return self.get_queryset().search(query=query)
+       
 class Articles(models.Model):
+    user = models.ForeignKey(User, blank=True,null=True,on_delete=models.SET_NULL)
     title= models.TextField()
     slug = models.SlugField(unique=True,blank=True,null=True)
     content= models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
-    publish= models.DateField(auto_now_add=False,auto_now=False,null=True,blank=True )
     updated = models.DateTimeField(auto_now=True)
-    
+    publish= models.DateField(auto_now_add=False,auto_now=False,null=True,blank=True )
+    objects = ArticleManager()
     def get_absolute_url(self):
-        return reverse('create')
+        return reverse('garment:article-detail',kwargs={"slug":self.slug})
     def save(self,*args,**kwargs):
         # obj = Articles.objects.get(id=1)
         #set something

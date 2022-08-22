@@ -3,15 +3,21 @@ from django.shortcuts import redirect, HttpResponse ,render,HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from . import models
 from . import myclass
+
 from .models import Articles,Stock
 from .forms import  ArticleForm,StockForm
 from django.urls import reverse
 from django.apps import apps
-from django.db.models import F
+from django.db.models import F,Q
 
+def article_search_view(request):
+    query= request.GET.get("q")
+    qs = Articles.objects.search(query)
+    context = {
+        "object_list":qs
+    }
+    return render(request,"cutting_app/search.html",context=context)
 
-def detail_view(request,id):
-    pass
 def article_create_view(request):
     form = ArticleForm(request.POST or None )
     context = {
@@ -42,7 +48,7 @@ def article_detail_view(request,slug=None):
     context = {
         "object":article_obj,
     }
-    return render(request,"cutting_app/detail.html")
+    return render(request,"cutting_app/detail.html",context=context)
 def stock(request):
     form = StockForm(request.POST or None)
     context = {
