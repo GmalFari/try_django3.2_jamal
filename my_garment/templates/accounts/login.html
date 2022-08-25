@@ -1,0 +1,41 @@
+{%  extends 'base.html' %}
+{% block content %}
+
+
+<div style="direction: rtl;" class="wrapper content-wrapper p-5">
+
+
+
+
+    <h1> Login </h1>
+    <br/><br/>
+    {% if not request.user.is_authenticated %}
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div class="container">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div> 
+        {% endfor %}
+        {%endif %}
+        </div>
+            <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">username</label>
+            <input type="text" class="form-control" name="username" aria-describedby="usernamehelp">
+            <div id="usernamehelp" class="form-text"></div>
+            </div>
+            <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Password</label>
+            <input type="password" class="form-control" name="password">
+            </div>
+        <input type="submit" value="submit" class="btn btn-secondary">
+    </form>
+    {% else %}
+    <p> You're already logged in . would you like to log out <a href="{% url 'logout' %}">logoud</a>
+    {% endif %}
+
+</div>
+{% endblock%}
