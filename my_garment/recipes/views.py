@@ -1,3 +1,4 @@
+from http.client import HTTPResponse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render , redirect, get_object_or_404
 from .models import Recipe,RecipeIngredient
@@ -23,6 +24,18 @@ def recipe_detail_view(request , id=id):
     }
     return render(request,"recipes/detail.html",context)
 
+@login_required
+def recipe_detail_hx_view(request , id=id):
+    try:
+        get_object_or_404(Recipe,id=id,user=request.user)
+    except:
+        obj = None
+    if obj is None:
+        return HTTPResponse("Not found.")
+    context = {
+        "object":obj,
+    }
+    return render(request,"recipes/partials/detail.html",context)
 def recipe_create_view(request):
     context = {
         "form":RecipeForm()
@@ -53,8 +66,6 @@ def recipe_update_view(request, id=None):
         "formset":formset,
         "object":obj,
     }
-    if request.method== "POST":
-        print(request.POST)
     if  all([form.is_valid() and formset.is_valid()]):
         parent = form.save(commit=False)
         parent.save()
@@ -63,4 +74,7 @@ def recipe_update_view(request, id=None):
             child.recipe = parent
             child.save()
         context['message'] = "updated data."
+    if request.htmx:
+        return render(request,"recipes/partials/forms.html",context)
+        
     return render(request,"recipes/create-update.html",context)
