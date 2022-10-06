@@ -15,10 +15,12 @@
  {% include 'recipes/partials/forms.html' %}
 
 <script>
-    const addMoreBtn= document.getElementById("add-more");
+    document.addEventListener('click',(event)=>{
+        if (event.target.id == "add-more"){
+            add_new_form(event)
+        }
+    })
     const totalNewForms = document.getElementById("id_form-TOTAL_FORMS")
-    addMoreBtn.addEventListener('click',add_new_form)
-      
     function add_new_form(event){
         if (event) {
             event.preventDefault()

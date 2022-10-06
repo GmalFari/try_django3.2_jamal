@@ -1,8 +1,6 @@
 <div style='margin-top:30px'>
-{% if message %} 
-       <div>{{ message }}</div>
-    {% endif %}
-<form action="." method="post" hx-post="." hx-swap="outerHTML">
+
+<form  action="." method="post" hx-post="." hx-swap="outerHTML">
     {% csrf_token %} 
     {% for field in form %}
     <div class='{% if field.field.required %} {{form.required_css_class}} {% endif%}'>
@@ -21,11 +19,13 @@
                     {{form.as_p}}
                 </div>
               {% endfor %}
-        </div>
             <div id='empty-form' class='hidden'> {{ formset.empty_form }}</div>
             <button id='add-more'>Add more</button>
             {% endif %}
-        </div>
-<input type="submit" value="create form">
-</form>
+            <div class="htmx-indicator"> Loading......</div>
+            <input class="htmx-inverted-indicator" type="submit" value="save">
+        </form>
+        {% if message %} 
+       <div>{{ message }}</div>
+    {% endif %}
 </div>

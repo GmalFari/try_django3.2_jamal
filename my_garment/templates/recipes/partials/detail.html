@@ -1,0 +1,15 @@
+    <h1>{{ object.name }}</h1>
+    {% if object.get_edit_url %}
+    <small>   
+        <a href="{{object.get_edit_url }}">Edit</a>
+    </small>
+    {% endif %}
+    <p>{{object.description}}</p> 
+    <hr>
+    <ul>
+        {% for ing in object.recipeingredient_set.all%}
+        <h1>{{ ing.name }}-{{ing.description}} </h1>
+        <p>{{ing.as_imperial}}</p>
+        <p>{{ing.as_mks}}</p>
+        {% endfor %}
+    </ul>

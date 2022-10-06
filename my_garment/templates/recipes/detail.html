@@ -1,20 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
-
-<div style='margin-top:30px'>
-    <h1> My Recipes</h1>
-    <div>{{ object.name }}</div>
-    <div>{{object.description}}</div> 
-    {% if object.get_edit_url %}
-    <a href="{{object.get_edit_url }}">Edit</a>
-    {% endif %}
-    <hr>
-    <ul>
-        {% for ing in object.recipeingredient_set.all%}
-        <h1>{{ ing.name }}-{{ing.description}} </h1>
-        <p>{{ing.as_imperial}}</p>
-        <p>{{ing.as_mks}}</p>
-        {% endfor %}
-    </ul>
+<div hx-get="{{hx_url}}" hx-trigger="revealed">
+    <div class="htmx-indicator">Loading....</div>
 </div>
+ 
 {% endblock %}

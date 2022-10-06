@@ -1,4 +1,5 @@
 from http.client import HTTPResponse
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render , redirect, get_object_or_404
 from .models import Recipe,RecipeIngredient
@@ -17,25 +18,25 @@ def recipe_list_view(request):
     return render(request,"recipes/list.html",context)
 
 @login_required
-def recipe_detail_view(request , id=id):
-    obj = get_object_or_404(Recipe,id=id,user=request.user)
+def recipe_detail_view(request , id=None):
+    hx_url = reverse("recipes:hx-detail",kwargs={"id":id})
     context = {
-        "object":obj,
+        "hx_url":hx_url,
     }
-    return render(request,"recipes/detail.html",context)
+    return render(request,"recipes/detail.html",context=context)
 
 @login_required
-def recipe_detail_hx_view(request , id=id):
+def recipe_detail_hx_view(request , id=None):
     try:
-        get_object_or_404(Recipe,id=id,user=request.user)
+        my_obj = Recipe.objects.get(id=id,user=request.user)
     except:
-        obj = None
-    if obj is None:
+        my_obj = None
+    if my_obj is None:
         return HTTPResponse("Not found.")
     context = {
-        "object":obj,
+        "object":my_obj,
     }
-    return render(request,"recipes/partials/detail.html",context)
+    return render(request,"recipes/partials/detail.html",context=context)
 def recipe_create_view(request):
     context = {
         "form":RecipeForm()
@@ -52,8 +53,6 @@ def recipe_create_view(request):
         return redirect(obj.get_absolute_url())
     return render(request,"recipes/create-update.html",context=context)
     
-
-
 def recipe_update_view(request, id=None):
     obj = get_object_or_404(Recipe,id=id,user=request.user)
     form = RecipeForm(request.POST or None, instance=obj)# can u use initial
