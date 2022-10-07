@@ -13,7 +13,12 @@
  </style>
 
  {% include 'recipes/partials/forms.html' %}
-
+ 
+ {% for ingredient in object.get_ingredient_children  %}
+    {% include 'recipes/partials/ingredient-inline.html' with object=ingredient %}
+    
+{% endfor %}
+    
 <script>
     document.addEventListener('click',(event)=>{
         if (event.target.id == "add-more"){
