@@ -12,12 +12,19 @@ class RecipeForm(forms.ModelForm):
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
         for field in self.fields:
-            self.fields[str(field)].widget.attrs.update({"placeholder":f"Recipe {str(field)}","class":"form-control-2"})
+            new_data = {
+                "placeholder":f"Recipe {str(field)}",
+                "class":"form-control",
+                "hx-post":".",
+                "hx-trigger":"keyup changed delay:500ms",
+                "hx-target":"#recipe-containter",
+                "hx-swap":"outerHTML",
+                }
+            self.fields[str(field)].widget.attrs.update(new_data)
         self.fields['description'].widget.attrs.update({"rows":'2'})
         self.fields['directions'].widget.attrs.update({"rows":'4'})
         # self.fields['name'].widget.attrs.update({"class":"form-control-2"})
     
-
 
 class RecipeIngredientForm(forms.ModelForm):
     class Meta:
