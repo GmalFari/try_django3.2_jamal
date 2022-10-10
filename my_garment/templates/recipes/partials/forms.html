@@ -1,7 +1,7 @@
 <div style='margin-top:30px' id="recipe-containter">
 
 <form  action="." method="post" hx-post="." hx-swap="outerHTML"
-    hx-trigger="change delay:500ms , submit" >
+    hx-trigger="{% if form.instance %}change delay:500ms{%else%} submit{%endif%}" >
     {% csrf_token %} 
     {% for field in form %}
     <div class='{% if field.field.required %} {{form.required_css_class}} {% endif%}'>

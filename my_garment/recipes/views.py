@@ -51,6 +51,11 @@ def recipe_create_view(request):
         obj = form.save(commit=False)
         obj.user = request.user
         obj.save()
+        if request.htmx:
+            header ={
+                "hx-Redirect":obj.get_absolute_url()
+            }
+            return HttpResponse("Created",header=header)
         context['message'] = "Data saved."
         return redirect(obj.get_absolute_url())
     return render(request,"recipes/create-update.html",context=context)
