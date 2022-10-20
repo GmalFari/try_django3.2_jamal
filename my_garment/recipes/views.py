@@ -64,7 +64,6 @@ def recipe_update_view(request, id=None):
     obj = get_object_or_404(Recipe,id=id,user=request.user)
     form = RecipeForm(request.POST or None, instance=obj)# can u use initial
     new_ingredient_url = reverse("recipes:hx-ingredient-new",kwargs={"parent_id":obj.id})
-
     context={
         "form":form,
         "object":obj,
@@ -75,7 +74,6 @@ def recipe_update_view(request, id=None):
         context['message'] = "updated data."
     if request.htmx:
         return render(request,"recipes/partials/forms.html",context)
-        
     return render(request,"recipes/create-update.html",context)
 
 @login_required

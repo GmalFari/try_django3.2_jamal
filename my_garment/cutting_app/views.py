@@ -1,10 +1,8 @@
-
 from django.shortcuts import redirect, HttpResponse ,render,HttpResponseRedirect,get_object_or_404 ,redirect,Http404
 from django.contrib.auth.decorators import login_required
 from . import models
 from . import myclass
-
-from .models import Articles,Stock
+from .models import Article,Stock
 from .forms import  ArticleForm,StockForm
 from django.urls import reverse
 from django.apps import apps
@@ -12,7 +10,7 @@ from django.db.models import F,Q
 
 def article_search_view(request):
     query= request.GET.get("q")
-    qs = Articles.objects.search(query)
+    qs = Article.objects.search(query)
     context = {
         "object_list":qs
     }
@@ -26,23 +24,23 @@ def article_create_view(request):
     if form.is_valid(): 
         article_obj = form.save()
         return HttpResponseRedirect(reverse("article-detail" ,args={"slug":article_obj.slug}))
-    context["list_objects"] = Articles.objects.all()
+    context["list_objects"] = Article.objects.all()
   
         # context['form'] = ArticleForm()
         # title = form.cleaned_data.get("title")
         # content = form.cleaned_data.get("content")
         # print(title)
-        # article_obj = Articles.objects.create(title=title,content=content)
+        # article_obj = Article.objects.create(title=title,content=content)
     return render(request, "cutting_app/articles.html",context=context)
 def article_detail_view(request,slug=None):
     article_obj = None
     if slug is not None:
         try:
-            article_obj = Articles.objects.get(slug=slug)
-        except Articles.DoesNotExist:
+            article_obj = Article.objects.get(slug=slug)
+        except Article.DoesNotExist:
             raise Http404
-        except Articles.MultipleObjectsReturned:
-            article_obj = Articles.objects.filter(slug=slug).first()
+        except Article.MultipleObjectsReturned:
+            article_obj = Article.objects.filter(slug=slug).first()
         except:
             raise Http404
     context = {

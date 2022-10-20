@@ -16,9 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 
+from search.views import search_view
+from .views import home_view
+
 urlpatterns = [
+    path('',home_view),
+    path("pantry/recipes/",include("recipes.urls")),
+    path('cutting/',include('cutting_app.urls')),
+    path('search/',search_view,name="search"),
     path('admin/', admin.site.urls),
     path('accounts/',include("accounts.urls")),
-    path('cutting/',include('cutting_app.urls')),
-    path("pantry/recipes/",include("recipes.urls")),
 ]

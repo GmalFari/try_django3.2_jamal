@@ -23,7 +23,7 @@ class ArticleManager(models.Manager):
     def search(self,query=None):
         return self.get_queryset().search(query=query)
        
-class Articles(models.Model):
+class Article(models.Model):
     user = models.ForeignKey(User, blank=True,null=True,on_delete=models.SET_NULL)
     title= models.TextField()
     slug = models.SlugField(unique=True,blank=True,null=True)
@@ -32,10 +32,13 @@ class Articles(models.Model):
     updated = models.DateTimeField(auto_now=True)
     publish= models.DateField(auto_now_add=False,auto_now=False,null=True,blank=True )
     objects = ArticleManager()
+    @property
+    def name(self):
+        return self.title
     def get_absolute_url(self):
         return reverse('garment:article-detail',kwargs={"slug":self.slug})
     def save(self,*args,**kwargs):
-        # obj = Articles.objects.get(id=1)
+        # obj = Article.objects.get(id=1)
         #set something
         # if self.slug is None:
         #   self.slug = slugify(self.title)
@@ -51,13 +54,13 @@ def article_pre_save(sender,instance , *args,**kwargs):
         slugify_instance_title(instance,save=False)
 
 
-pre_save.connect(article_pre_save,sender=Articles)
+pre_save.connect(article_pre_save,sender=Article)
 
 def article_post_save(sender,instance,created,*args,**kwargs):
     print("post_save")
     if created:
         slugify_instance_title(instance,save=True)
-post_save.connect(article_post_save,sender=Articles)
+post_save.connect(article_post_save,sender=Article)
 
 class Employee(models.Model):
     emp_name = models.CharField(max_length=100,unique=True,verbose_name="إسم الموظف")

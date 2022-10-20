@@ -1,6 +1,7 @@
+from cgitb import lookup
 import pint
-from sqlite3 import Timestamp
 from django.conf import settings
+from django.db.models import Q
 from django.db import models
 from django.urls import reverse
 from .utils import number_str_to_float
@@ -16,16 +17,35 @@ from .validators import valid_unit_of_measure
     -Ingredients
     -Directions for Ingredients
 """
+class RecipeQuerySet(models.QuerySet):
+    def search(self,query=None):
+        if query is None or query=="":
+            return self.none()
+        lookups =( Q(name__icontains=query) | 
+        Q(description__icontains=query) |
+         Q(directions__icontains=query)
+        )
+        return self.filter(lookups)
 
+class RecipeManager(models.Manager):
+    def get_queryset(self):
+        return RecipeQuerySet(self.model,using=self._db)
+    def search(self,query=None):
+        return self.get_queryset().search(query=query)
 class Recipe(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name= models.CharField(max_length=220)
     description = models.TextField(blank=True,null=True)
     directions = models.TextField(blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
+    objects = RecipeManager()
     updated = models.DateField(auto_now=True)
     active = models.BooleanField(default=True)
     
+    # this method added for search on this and Article object
+    @property
+    def title(self):
+        return self.name
     def get_absolute_url(self):
         return reverse("recipes:detail",kwargs={"id":self.id})
     def get_hx_url(self):

@@ -1,14 +1,9 @@
 from django.urls import path
 from .views import (
-    # update,
     article_detail_view,
     article_search_view,
-  
-    # home,
     stock,
     article_create_view
-    # fabric_view,
-    # created_view,
 )
 
 app_name = 'garment'

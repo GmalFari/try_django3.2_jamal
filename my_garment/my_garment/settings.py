@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'accounts',
     'cutting_app',
     'recipes',
+    'search',
 ]
 
 MIDDLEWARE = [

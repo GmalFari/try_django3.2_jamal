@@ -9,7 +9,7 @@ from cutting_app.models import *
 
 class ArticleForm(forms.ModelForm):
     class Meta:
-        model = Articles
+        model = Article
         fields = ['title','slug','content','publish']
         Widgets = {
             'title':forms.TextInput(attrs={'class':'form-control'})
@@ -19,7 +19,7 @@ class ArticleForm(forms.ModelForm):
     #     data = self.cleaned_data
     #     title = data.get("title")
     #     if title != None:
-    #         qs = Articles.objects.all().filter(title__icontains=title)
+    #         qs = Article.objects.all().filter(title__icontains=title)
     #     if qs.exists():
     #         self.add_error("title",f" \"{title}\" already in use .")
     #     return data
